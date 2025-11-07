@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Echocardiogram</title>
+  <link rel="stylesheet" href="mainStyle.css">
+  <link rel="stylesheet" href="feedbackStyle.css">
+  <link rel="stylesheet" href="machineStyle.css">
+  <link rel="stylesheet" href="tutorialStyle.css">
+
+</head>
+<body>
+  <div id="fullscreenPrompt" class="prompt">
+    <div class="prompt-content">
+      <h1>Echocardiogram Simulator</h1>
+      <p>For the best experience, please use fullscreen mode.</p>
+      <div class="button-container"> 
+        <button id="fullscreen-btn" class="btn">Go Fullscreen</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="promptOverlay" class="prompt-overlay hidden"></div>
+
+  <div id="titleScreen" class="screen">
+    <div class="title-card">
+      <h1>Echocardiogram</h1>
+      <p>Practice identifying cardiac structures using ultrasound imaging. Drag the probe to different positions on the body, and select the correct anatomical structures to test your knowledge.</p>
+      <div class="button-container">
+        <button id="startButton" class="btn">Start Game</button>
+        <button id="sandBoxButton" class="btn secondary-btn">Try Simulation</button>
+        <button id="tutorialButton" class="btn secondary-btn">How to Play</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="questionTitleScreen" class="screen hidden">
+    <div class="title-card">
+      <div id="questionNumber" class="question-number">Question 1 of 5</div>
+      <div id="questionText" class="question-text">In parasternal long axis view (PLAX), where is the right ventricle?</div>
+      <div class="button-container">
+        <button id="continueButton" class="btn">Continue to Simulator</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tutorialOverlay" class="tutorial hidden">
+    <div class="tutorial-content">
+      <button id="closeTutorialX" class="close-btn">&times;</button>
+      <h2>Instructions</h2>
+      <div id="slideshowContainer">
+        <div class="slide" data-slide="1">
+          <p id="tutorialText"></p>
+          <img id="tutorialImage" class="slide-image" alt="Tutorial Image">
+        </div>
+      </div>
+      <div class="slideshow-controls">
+        <button id="prevSlideButton" class="nav-btn-left">Previous</button>
+        <div id="slideIndicator" class="slide-indicator">1 of 4</div>
+        <button id="nextSlideButton" class="nav-btn-right">Next</button>
+        <button id="closeTutorialButton" class="nav-btn-right hidden">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="exitPrompt" class="exit hidden">
+    <div class="exitPrompt-content">
+      <h2>Exit to Main Menu</h2>
+      <p>Are you sure you want to exit? Your current progress will be lost.</p>
+      <div class="exit-button-container">
+        <button id="cancelExitButton" class="btn secondary-btn">No, Return</button>
+        <button id="confirmExitButton" class="btn">Yes, Exit</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="container" class="container hidden">
+    <div class="probe-explanation">
+      <div class="probe-header">Probe Explanation</div>
+      <div class="probe-content">
+        <img src="images/probe_explanation_2.png" alt="Probe Diagram" class="probe-diagram">
+      </div>
+      <div class="container-controls">
+        <button id="tutorialButton2" class="control-btn exit-btn">Instructions</button>
+      </div>
+    </div>
+
+    <div class="body-area">
+      <img src="./images/body2.png" alt="Body" class="body-img">
+
+      <div class="cell" data-pos="1"></div>
+      <div class="cell" data-pos="2"></div>
+      <div class="cell" data-pos="3"></div>
+      <div class="cell" data-pos="4"></div>
+      
+      <div id="probe" class="probe">
+        <img src="./images/probe_h.png" alt="Probe" draggable="false">
+        <div id="probeTailAnchor"></div>
+      </div>
+      
+      <div class="rope-container">
+        <svg width="100%" height="100%" viewBox="0 0 800 600" preserveAspectRatio="none">
+          <path id="ropePath" d="M200,50 C300,150 400,150 500,250" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="machine-area">
+      <div class="machine-header">
+          <span>Echocardiogram</span>
+      </div> 
+      <div class="question-area" id="questionArea">
+        <div class="question-number">Question <span id="currentQuestion">1</span> of 5</div>
+        <div id="questionBox"></div>
+      </div>
+      <div id="imageDisplay" class="ultrasound-display">
+        <div class="image-placeholder">
+          <i>!</i>
+          <p>Drag and position the probe to view ultrasound images</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="position-indicators">
+          <div class="view-container hidden" id="partContainer" aria-live="polite">
+            <div class="view-label">ANATOMICAL VIEW</div>
+            <div id="partDisplay" class="view-value">—</div>
+          </div>
+          <div class="view-container" id="viewContainer" aria-live="polite">
+            <div class="view-label">VIEW</div>
+            <div id="viewDisplay" class="view-value">—</div>
+          </div>
+          <div class="indicator-group">
+            <div class="indicator-label">ROTATION</div>
+            <div id="rotationDisplay" class="indicator-value">0°</div>
+          </div>
+          <div class="indicator-group">
+            <div class="indicator-label">TAIL POSITION</div>
+            <div id="tailDisplay" class="indicator-value tail-indicator"></div>
+            </div>
+          </div>
+        </div>
+        <button id="viewToggleButton" class="hidden">Switch View</button>        
+        <div class="container-controls">
+          <button id="exitButton" class="control-btn exit-btn">Exit to Main Menu</button>
+        </div>
+      </div>
+    </div>
+    <div id="feedbackBox" class="feedback hidden">
+      <p id="feedbackText"></p>
+      <img id="correctAnswerImage" class="hidden" alt="Correct Answer" />
+      <div class="feedback-actions">
+        <button id="nextQuestionButton" class="btn hidden">Next Question</button>
+        <button id="showAnswerButton" class="btn hidden">Show Answer</button>
+      </div>
+    </div>
+
+    <div id="containerOverlay" class="overlay hidden"></div>
+
+  </div>
+
+  <div id="endScreen" class="screen hidden">
+    <div class="end-card">
+      <h1>Simulation Complete</h1>
+      <div class="final-score">Your score: <span id="finalScore">0</span></div>
+      <button id="restartButton" class="btn">Restart Simulation</button>
+    </div>
+  </div>
+  <script src="imagedata.js"></script>
+  <script src="main.js"></script>
+  <script src="loadquestions.js"></script>
+  <script src="probe.js"></script>
+  <script src="rope.js"></script>
+  <script src="feedback.js"></script>
+  <script src="tutorial.js"></script>
+</body>
+</html>
