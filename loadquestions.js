@@ -138,7 +138,7 @@ function updateImagePreview() {
   }
 
   // Show “switch view” UI if there are multiples
-  if (views.length > 1 && isSimulatorActive) {
+  if (views.length > 1 && isSimulatorActive || isSandBoxActive) {
     toggleButton.classList.remove('hidden');
     toggleButton.textContent = `Switch View (${currentViewIndex+1}/${views.length})`;
 
